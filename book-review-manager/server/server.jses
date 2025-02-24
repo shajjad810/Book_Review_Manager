@@ -1,0 +1,31 @@
+  UW PICO 5.09           File: server.js           Modified  
+
+app.use(express.json());
+
+// Routes
+app.use('/api/books', bookRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port $$
+
+
+^G Get Hel^O WriteOu^R Read Fi^Y Prev Pg^K Cut Tex^C Cur Pos
+^X Exit   ^J Justify^W Where i^V Next Pg^U UnCut T^T To Spelconst express = require('express');
+const connectDB = require('./config/db');
+const bookRoutes = require('./routes/bookRoutes');
+const cors = require('cors');
+
+const app = express();
+
+// Connect to database
+connectDB();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Routes
+app.use('/api/books', bookRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

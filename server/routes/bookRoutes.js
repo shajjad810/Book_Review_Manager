@@ -1,0 +1,63 @@
+const express = require('express');
+const router = express.Router();
+const Book = require('../models/Book');
+
+// Get all books
+router.get('/', async (req, res) => {
+  try {
+    const books = await Book.find().sort({ createdAt: -1 });
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Create a book
+router.post('/', async (req, res) => {
+  const book = new Book({
+    title: req.body.title,
+    author: req.body.author,
+    rating: req.body.rating,
+    review: req.body.review
+  });
+
+  try {
+    const newBook = await book.save();
+    res.status(201).json(newBook);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Update a book
+router.put('/:id', async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ message: 'Book not found' });
+
+    book.title = req.body.title || book.title;
+    book.author = req.body.author || book.author;
+    book.rating = req.body.rating || book.rating;
+    book.review = req.body.review || book.review;
+
+    const updatedBook = await book.save();
+    res.json(updatedBook);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Delete a book
+router.delete('/:id', async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ message: 'Book not found' });
+
+    await book.remove();
+    res.json({ message: 'Book deleted' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
