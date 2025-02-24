@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import BookList from './components/BookList';
+import BookForm from './components/BookForm';
+import './styles.css';
 
 function App() {
+  const [books, setBooks] = useState([]);
+
+  const fetchBooks = async () => {
+    const response = await fetch('http://localhost:5050/api/books');
+    const data = await response.json();
+    setBooks(data);
+  };
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Book Review Manager</h1>
+      <BookForm fetchBooks={fetchBooks} />
+      <BookList books={books} fetchBooks={fetchBooks} />
     </div>
   );
 }
